@@ -21,7 +21,7 @@ burgers.route('/')
   	// redirect to the new item (in a db, you'd return the new id)
   	var newID = burgerData.length-1;
     // res.send(burgerData);
-  	res.redirect(303, './'+ newID);
+  	res.redirect(303, './' + newID);
   })
 
 // single burger
@@ -41,7 +41,6 @@ burgers.route('/:burgerID')
   /*one burger update*/
   .put((req,res) => {
     var bID = req.params.burgerID;
-    console.log("PUUUUUUUT", req.body)
     // if we don't have a burger there, send 404
     if(!(bID in burgerData)){
       res.sendStatus(404);
@@ -52,10 +51,24 @@ burgers.route('/:burgerID')
     burgerData[bID] = req.body;
 
     // redirect to the new burger
-    res.redirect(303, './' + bID)
+    res.redirect(303, './' + bID);
   })
   // delete a burger
-  .delete(dumpMethod)
+  .delete((req,res)=>{
+    var bID = req.params.burgerID;
+    console.log('delete', req.body)
+    // if we don't have a burger there, send 404
+    if(!(bID in burgerData)){
+      res.sendStatus(404);
+      return;
+    }
+
+    // remove the burger from the array
+    burgerData.splice(burgerData[bID], 1);
+
+    // redirect to burgers
+    res.redirect(303, './');
+  })
 
 // edit burger form
 burgers.get('/:burgerID/edit', dumpMethod);
