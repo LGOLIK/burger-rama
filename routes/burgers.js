@@ -21,23 +21,39 @@ burgers.route('/')
   	// redirect to the new item (in a db, you'd return the new id)
   	var newID = burgerData.length-1;
     // res.send(burgerData);
-  	res.redirect('./'+ newID);
+  	res.redirect(303, './'+ newID);
   })
 
 // single burger
 burgers.route('/:burgerID')
   // view a burger
-  .get((req,res)=>{
+  .get((req,res) => {
     var bID = req.params.burgerID;
     // if there is not a burger at position :burgerID, throw a non-specific error
     if(!(bID in burgerData)){
       res.sendStatus(404);
       return;
     }
+    // right now this is send, will need to be replaced with form
     res.send({data: burgerData[bID]})
   })
   // edit a burger
-  .put(dumpMethod)
+  /*one burger update*/
+  .put((req,res) => {
+    var bID = req.params.burgerID;
+    console.log("PUUUUUUUT", req.body)
+    // if we don't have a burger there, send 404
+    if(!(bID in burgerData)){
+      res.sendStatus(404);
+      return;
+    }
+
+    // replace the burger at :burgerID position
+    burgerData[bID] = req.body;
+
+    // redirect to the new burger
+    res.redirect(303, './' + bID)
+  })
   // delete a burger
   .delete(dumpMethod)
 
