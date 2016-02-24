@@ -20,6 +20,19 @@ app.use( bodyParser.json());
 // log
 app.use(logger('dev'));
 
+// parse incoming forms
+/* we'll be reading the form body,
+but not accepting files, or anything more than text*/
+app.use( bodyParser.urlencoded({ extended: false }));
+/* we'll convert everything we receive into json,
+for our convenience */
+app.use( bodyParser.json());
+
+// override with POST having ?_method=XXXX
+/* e.g. If we need to make a PUT,
+we'll POST to a url appended with ?_method=put */
+app.use(methodOverride('_method'));
+
 // public route for css
 app.use( express.static( path.join( __dirname, 'public' )));
 
